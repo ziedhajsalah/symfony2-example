@@ -7,7 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function indexAction($firstName)
+    public function indexAction()
+    {
+        return new Response('index page');
+    }
+
+    public function helloAction($firstName)
     {
         return $this->render('EventBundle:Default:index.html.twig', [
             'name' => $firstName

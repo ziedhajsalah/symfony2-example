@@ -1,6 +1,10 @@
 event_homepage:
-    path:     /{firstName}
+    path:     /
     defaults: { _controller: EventBundle:Default:index }
+
+event_hellopage:
+    path:     /{firstName}
+    defaults: { _controller: EventBundle:Default:hello }
 
 event_testpage:
     path: /json/{firstName}

@@ -1,3 +1,7 @@
 event_homepage:
-    path:     /
+    path:     /{firstName}
     defaults: { _controller: EventBundle:Default:index }
+
+event_testpage:
+    path: /json/{firstName}
+    defaults: { _controller: EventBundle:Default:test }

@@ -5,6 +5,7 @@ namespace EventBundle\Controller;
 use EventBundle\Entity\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Event controller.
@@ -15,6 +16,8 @@ class EventController extends Controller
     /**
      * Lists all event entities.
      *
+     * @Template()
+     *
      */
     public function indexAction()
     {
@@ -22,13 +25,13 @@ class EventController extends Controller
 
         $events = $em->getRepository('EventBundle:Event')->findAll();
 
-        return $this->render('EventBundle:Event:index.html.twig', array(
-            'events' => $events,
-        ));
+        return ['events' => $events];
     }
 
     /**
      * Creates a new event entity.
+     *
+     * @Template()
      *
      */
     public function newAction(Request $request)
@@ -45,28 +48,32 @@ class EventController extends Controller
             return $this->redirectToRoute('event_show', array('id' => $event->getId()));
         }
 
-        return $this->render('EventBundle:Event:new.html.twig', array(
+        return [
             'event' => $event,
-            'form' => $form->createView(),
-        ));
+            'form'  => $form->createView(),
+        ];
     }
 
     /**
      * Finds and displays a event entity.
+     *
+     * @Template()
      *
      */
     public function showAction(Event $event)
     {
         $deleteForm = $this->createDeleteForm($event);
 
-        return $this->render('EventBundle:Event:show.html.twig', array(
-            'event' => $event,
+        return [
+            'event'       => $event,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ];
     }
 
     /**
      * Displays a form to edit an existing event entity.
+     *
+     * @Template()
      *
      */
     public function editAction(Request $request, Event $event)
@@ -81,16 +88,15 @@ class EventController extends Controller
             return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
         }
 
-        return $this->render('EventBundle:Event:edit.html.twig', array(
-            'event' => $event,
-            'edit_form' => $editForm->createView(),
+        return [
+            'event'       => $event,
+            'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ];
     }
 
     /**
      * Deletes a event entity.
-     *
      */
     public function deleteAction(Request $request, Event $event)
     {
@@ -118,7 +124,6 @@ class EventController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('event_delete', array('id' => $event->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

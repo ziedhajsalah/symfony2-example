@@ -2,7 +2,13 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>
+            {%- if block('title') -%}
+                {{ block('title') }} | StarWars Events
+            {%- else -%}
+                StarWars Events
+            {%- endif -%}
+        </title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('bundles/event/css/event.css') }}">
             <link rel="stylesheet" href="{{ asset('bundles/event/css/events.css') }}">

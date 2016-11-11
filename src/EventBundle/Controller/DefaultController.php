@@ -7,24 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function indexAction()
+    public function indexAction($count, $firstName)
     {
-        return new Response('index page');
-    }
-
-    public function helloAction($firstName)
-    {
-        return $this->render('EventBundle:Default:index.html.twig', [
-            'name' => $firstName
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('EventBundle:Event');
+        $event = $repo->findOneBy([
+            'name' => 'Birthday party'
         ]);
-    }
 
-    public function testAction($firstName)
-    {
-        $arr = ['name' => $firstName];
-        $response = new Response(json_encode($arr));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return $this->render('EventBundle:Default:index.html.twig', [
+            'name'  => $firstName,
+            'count' => $count,
+            'event' => $event
+        ]);
     }
 }

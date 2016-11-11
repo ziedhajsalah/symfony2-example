@@ -1,11 +1,8 @@
+event_event:
+    resource: "@EventBundle/Resources/config/routing/event.yml"
+    prefix:   /
+
 event_homepage:
-    path:     /
+    path:     /{count}/{firstName}
     defaults: { _controller: EventBundle:Default:index }
 
-event_hellopage:
-    path:     /{firstName}
-    defaults: { _controller: EventBundle:Default:hello }
-
-event_testpage:
-    path: /json/{firstName}
-    defaults: { _controller: EventBundle:Default:test }

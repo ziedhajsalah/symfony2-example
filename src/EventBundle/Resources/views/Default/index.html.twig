@@ -3,5 +3,10 @@
 {% block title %} Hello {% endblock %}
 
 {% block body %}
-    Hello <strong>{{ name }}</strong>
+    Hello <strong>{{ name }}, {{ count }}</strong><br>
+
+    {% if event %}
+        {{ event.name }} <br>
+        {{ event.location }} <br>
+    {%  endif %}
 {% endblock %}

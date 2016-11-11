@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section class="login">
+        <article>
+            {% if error %}{{ error.message }}{% endif %}
+
+            <form action="{{ path('login_check') }}" method="post">
+                <label for="username">Username:</label>
+                <input type="text" value="{{ last_username }}" id="username" name="_username">
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="_password">
+                <button type="submit">Login</button>
+            </form>
+        </article>
+    </section>
+{% endblock %}

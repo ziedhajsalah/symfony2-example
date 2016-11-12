@@ -15,10 +15,17 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         $user = new User();
-        $user->setUsername('zied');
-        $user->setPassword($this->encodePassword($user, 'ziedpassword'));
+        $user->setUsername('user');
+        $user->setPassword($this->encodePassword($user, 'userpassword'));
 
         $manager->persist($user);
+
+        $admin = new User();
+        $admin->setUsername('administrator');
+        $admin->setPassword($this->encodePassword($user, 'adminpassword'));
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $manager->persist($admin);
 
         $manager->flush();
     }

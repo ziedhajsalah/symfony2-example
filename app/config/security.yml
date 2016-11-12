@@ -7,7 +7,7 @@ security:
 
     providers:
         database:
-            entity: { class: UserBundle:User, property: username }
+            entity: { class: UserBundle:User }
         #in_memory:
         #    memory:
         #        users:

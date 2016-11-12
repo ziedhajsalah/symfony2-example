@@ -6,6 +6,7 @@ use EventBundle\Entity\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Event controller.
@@ -36,6 +37,8 @@ class EventController extends Controller
      */
     public function newAction(Request $request)
     {
+        $this->enforceUserSecurity();
+
         $event = new Event();
         $form = $this->createForm('EventBundle\Form\EventType', $event);
         $form->handleRequest($request);
@@ -78,6 +81,8 @@ class EventController extends Controller
      */
     public function editAction(Request $request, Event $event)
     {
+        $this->enforceUserSecurity();
+
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('EventBundle\Form\EventType', $event);
         $editForm->handleRequest($request);
@@ -100,6 +105,8 @@ class EventController extends Controller
      */
     public function deleteAction(Request $request, Event $event)
     {
+        $this->enforceUserSecurity();
+
         $form = $this->createDeleteForm($event);
         $form->handleRequest($request);
 
@@ -125,5 +132,16 @@ class EventController extends Controller
             ->setAction($this->generateUrl('event_delete', array('id' => $event->getId())))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * Checks if the user is authenticated and has ROLE_USER or throw an Exception
+     */
+    private function enforceUserSecurity() {
+        $securityAuthorizationChecker = $this->get('security.authorization_checker');
+
+        if(!$securityAuthorizationChecker->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException('you need to be authenticated to access this page');
+        }
     }
 }

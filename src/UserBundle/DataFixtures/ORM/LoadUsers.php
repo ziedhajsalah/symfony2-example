@@ -24,6 +24,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $admin->setUsername('administrator');
         $admin->setPassword($this->encodePassword($user, 'adminpassword'));
         $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setIsActive(true);
 
         $manager->persist($admin);
 

@@ -17,10 +17,10 @@
                     {{ form_widget(register_form.username) }}
                 </div>
                 {{ form_row(register_form.email) }}
-                {{ form_row(register_form.password.first, {
+                {{ form_row(register_form.plainPassword.first, {
                     label: 'Password'
                 }) }}
-                {{ form_row(register_form.password.second, {
+                {{ form_row(register_form.plainPassword.second, {
                     label: 'Confirm Password'
                 }) }}
 

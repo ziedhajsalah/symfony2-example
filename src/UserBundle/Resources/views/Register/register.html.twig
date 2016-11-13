@@ -10,7 +10,16 @@
         <article>
             <h1>Register</h1>
             <form action="{{ path('user_register') }}" method="post">
-                {{ form_widget(register_form) }}
+                {{ form_errors(register_form) }}
+                <div class="awesome-username-wrapper">
+                    {{ form_errors(register_form.username) }}
+                    {{ form_label(register_form.username) }}
+                    {{ form_widget(register_form.username) }}
+                </div>
+                {{ form_row(register_form.email) }}
+                {{ form_row(register_form.password) }}
+
+                {{ form_rest(register_form) }}
                 <input type="submit" value="Register"
                        class="btn btn-primary pull-right">
             </form>

@@ -37,7 +37,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
-    public function encodePassword(User $user, $plainPassword)
+    private function encodePassword(User $user, $plainPassword)
     {
         $encoder = $this->container->get('security.encoder_factory')
             ->getEncoder($user);

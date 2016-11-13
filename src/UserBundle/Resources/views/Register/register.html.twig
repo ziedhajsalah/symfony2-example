@@ -9,6 +9,11 @@
     <section class="login">
         <article>
             <h1>Register</h1>
+            <form action="{{ path('user_register') }}" method="post">
+                {{ form_widget(register_form) }}
+                <input type="submit" value="Register"
+                       class="btn btn-primary pull-right">
+            </form>
         </article>
     </section>
 {% endblock %}

@@ -20,7 +20,11 @@ class RegisterController extends Controller
      */
     public function registerAction(Request $request)
     {
-        $form = $this->createFormBuilder()
+        $defaultData = [
+            'username' => 'put your username here',
+            'email' => 'put you email here'
+        ];
+        $form = $this->createFormBuilder($defaultData)
             ->add('username', TextType::class)
             ->add('email', EmailType::class)
             ->add('password',

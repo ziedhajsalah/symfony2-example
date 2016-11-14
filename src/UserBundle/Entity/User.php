@@ -4,12 +4,16 @@ namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
+ * @UniqueEntity(fields="username", message="This username is already taken")
+ * @UniqueEntity(fields="email", message="This email exists")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -26,6 +30,8 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="The username field is required.")
+     * @Assert\Length(min=3, minMessage="The username field must be 3 characters at least.")
      */
     private $username;
 
@@ -33,6 +39,8 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", unique=true, length=255)
+     * @Assert\NotBlank(message="The email field is required.")
+     * @Assert\Email
      */
     private $email;
 
@@ -43,6 +51,14 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $password;
 
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/",
+     *     message="Use 1 upper case letter, 1 lower case letter, and 1 number"
+     * )
+     */
     private $plainPassword;
 
     /**

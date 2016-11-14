@@ -9,7 +9,7 @@
     <section class="login">
         <article>
             <h1>Register</h1>
-            <form action="{{ path('user_register') }}" method="post">
+            <form action="{{ path('user_register') }}" method="post" novalidate>
                 {{ form_errors(register_form) }}
                 <div class="awesome-username-wrapper">
                     {{ form_errors(register_form.username) }}

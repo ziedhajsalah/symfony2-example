@@ -22,5 +22,17 @@ class RegisterControllerTest extends WebTestCase
 
         $this->assertEquals('put your username here', $usernameVal);
 
+        $form = $crawler->selectButton('Register')->form();
+        $form['user_register[username]'] = 'user65';
+        $form['user_register[email]'] = 'user65@mail.com';
+        $form['user_register[plainPassword][first]'] = 'passUser65';
+        $form['user_register[plainPassword][second]'] = 'passUser65';
+        $crawler = $client->submit($form);
+        $this->assertTrue($client->getResponse()->isRedirect());
+        $client->followRedirect();
+        $this->assertContains(
+            'Congratulations you are now registered',
+            $client->getResponse()->getContent()
+        );
     }
 }

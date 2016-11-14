@@ -26,6 +26,8 @@ security:
                 target: event_index
             anonymous: ~
             switch_user: ~
+            remember_me:
+                key: "secret key"
             #http_basic:
             #    realm: "Secured Demo Area"
 

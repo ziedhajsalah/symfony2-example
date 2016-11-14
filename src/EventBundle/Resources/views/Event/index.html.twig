@@ -6,7 +6,9 @@
             <a class="button" href="{{ path('event_new') }}">Create new event</a>
 
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <a href="{{ path('logout') }}" class="link">Logout</a>
+                <a href="{{ path('logout') }}" class="link">
+                    Logout {{ app.user.username }}
+                </a>
             {% else %}
                 <a href="{{ path('login_form') }}" class="link">Login</a>
             {% endif %}

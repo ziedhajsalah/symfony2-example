@@ -46,7 +46,7 @@ class RegisterController extends Controller
 
     private function authenticateUser(User $user)
     {
-        $this->container->get('security.context')
+        $this->container->get('security.token_storage')
             ->setToken(
                 new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles())
             );

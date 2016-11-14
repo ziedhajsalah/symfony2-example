@@ -10,6 +10,15 @@ class RegisterControllerTest extends WebTestCase
     {
         // Create a new client to browse the application
         $client = static::createClient();
+
+        $container = self::$kernel->getContainer();
+        $em = $container->get('doctrine')->getManager();
+        $userRepo = $em->getRepository('UserBundle:User');
+        $userRepo->createQueryBuilder('u')
+            ->delete()
+            ->getQuery()
+            ->execute();
+
         $crawler = $client->request('GET', '/register');
         $response = $client->getResponse();
 

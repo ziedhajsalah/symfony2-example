@@ -25,6 +25,7 @@ security:
                 path:   logout
                 target: event_index
             anonymous: ~
+            switch_user: ~
             #http_basic:
             #    realm: "Secured Demo Area"
 

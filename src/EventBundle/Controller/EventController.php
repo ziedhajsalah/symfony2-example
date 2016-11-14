@@ -34,11 +34,12 @@ class EventController extends Controller
      * Creates a new event entity.
      *
      * @Template()
-     *
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function newAction(Request $request)
     {
-        $this->enforceUserSecurity();
+        $this->enforceUserSecurity('ROLE_EVENT_CREATE');
 
         $event = new Event();
         $form = $this->createForm('EventBundle\Form\EventType', $event);
@@ -49,7 +50,9 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush($event);
 
-            return $this->redirectToRoute('event_show', array('id' => $event->getId()));
+            return $this->redirectToRoute('event_show', array(
+                'id' => $event->getId()
+            ));
         }
 
         return [
@@ -57,6 +60,11 @@ class EventController extends Controller
             'form'  => $form->createView(),
         ];
     }
+
+//    public function createAction(Request $request)
+//    {
+//        $this->enforceUserSecurity('ROLE_EVENT_CREATE');
+//    }
 
     /**
      * Finds and displays a event entity.
@@ -91,7 +99,9 @@ class EventController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('event_edit', array('id' => $event->getId()));
+            return $this->redirectToRoute('event_edit', array(
+                'id' => $event->getId()
+            ));
         }
 
         return [
@@ -130,19 +140,25 @@ class EventController extends Controller
     private function createDeleteForm(Event $event)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('event_delete', array('id' => $event->getId())))
+            ->setAction($this->generateUrl(
+                'event_delete', array('id' => $event->getId())
+            ))
             ->setMethod('DELETE')
             ->getForm();
     }
 
     /**
      * Checks if the user is authenticated and has ROLE_USER or throw an Exception
+     * @param string $role
      */
-    private function enforceUserSecurity() {
-        $securityAuthorizationChecker = $this->get('security.authorization_checker');
+    private function enforceUserSecurity($role = 'ROLE_USER') {
+        $securityAuthorizationChecker = $this
+            ->get('security.authorization_checker');
 
-        if(!$securityAuthorizationChecker->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException('you need to be authenticated to access this page');
+        if(!$securityAuthorizationChecker->isGranted($role)) {
+            throw new AccessDeniedException(
+                'you need ' . $role . 'to access this page'
+            );
         }
     }
 }

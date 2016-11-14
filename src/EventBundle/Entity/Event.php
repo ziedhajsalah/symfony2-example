@@ -3,6 +3,7 @@
 namespace EventBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use UserBundle\Entity\User;
 
 /**
  * Event
@@ -49,6 +50,11 @@ class Event
      */
     private $details;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    protected $owner;
 
     /**
      * Get id
@@ -150,5 +156,24 @@ class Event
     public function getDetails()
     {
         return $this->details;
+    }
+
+    /**
+     * @return User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param User $owner
+     * @return $this
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
     }
 }

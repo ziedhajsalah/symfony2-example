@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use UserBundle\Entity\User;
 use UserBundle\Form\RegisterFormType;
 
@@ -34,10 +35,21 @@ class RegisterController extends Controller
             $request->getSession()
                 ->getFlashBag()
                 ->add('success', 'Congratulations you are now registered');
+
+            $this->authenticateUser($user);
+
             return $this->redirectToRoute('event_index');
         }
 
         return ['register_form' => $form->createView()];
+    }
+
+    private function authenticateUser(User $user)
+    {
+        $this->container->get('security.context')
+            ->setToken(
+                new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles())
+            );
     }
 
     private function encodePassword(User $user, $plainPassword)

@@ -23,9 +23,9 @@ class EventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $events = $em->getRepository('EventBundle:Event')->findAll();
-        //var_dump($em->getRepository('UserBundle:User')->findOneByUsernameOrEmail('admin@mail.com'));
-        //var_dump($em->getRepository('UserBundle:User')->findOneByUsernameOrEmail('administrator'));die;
+        $events = $em->getRepository('EventBundle:Event')
+            ->getUpcomingEvents();
+
         return ['events' => $events];
     }
 
@@ -52,9 +52,12 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush($event);
 
-            return $this->redirectToRoute('event_show', array(
-                'id' => $event->getId()
-            ));
+            return $this->redirectToRoute(
+                'event_show',
+                array(
+                    'id' => $event->getId(),
+                )
+            );
         }
 
         return [
@@ -107,9 +110,12 @@ class EventController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('event_edit', array(
-                'id' => $event->getId()
-            ));
+            return $this->redirectToRoute(
+                'event_edit',
+                array(
+                    'id' => $event->getId(),
+                )
+            );
         }
 
         return [
@@ -149,9 +155,12 @@ class EventController extends Controller
     private function createDeleteForm(Event $event)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl(
-                'event_delete', array('id' => $event->getId())
-            ))
+            ->setAction(
+                $this->generateUrl(
+                    'event_delete',
+                    array('id' => $event->getId())
+                )
+            )
             ->setMethod('DELETE')
             ->getForm();
     }

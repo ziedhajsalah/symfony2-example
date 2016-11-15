@@ -72,10 +72,15 @@ class EventController extends Controller
      * Finds and displays a event entity.
      *
      * @Template()
-     *
+     * @param $slug
+     * @return array
      */
-    public function showAction(Event $event)
+    public function showAction($slug)
     {
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('EventBundle:Event')
+            ->findOneBy(['slug' => $slug]);
+
         $deleteForm = $this->createDeleteForm($event);
 
         return [

@@ -15,6 +15,8 @@ class RegisterController extends Controller
     /**
      * @Route("/register", name="user_register")
      * @Template()
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function registerAction(Request $request)
     {

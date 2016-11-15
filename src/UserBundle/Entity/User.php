@@ -2,6 +2,7 @@
 
 namespace UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -73,6 +74,16 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive = true;
+
+    /**
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="owner")
+     */
+    private $events;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -335,5 +346,13 @@ class User implements AdvancedUserInterface, \Serializable
         $this->plainPassword = $plainPassword;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEvents()
+    {
+        return $this->events;
     }
 }

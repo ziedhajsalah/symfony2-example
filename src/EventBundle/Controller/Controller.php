@@ -5,11 +5,13 @@ namespace EventBundle\Controller;
 use EventBundle\Entity\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class Controller extends BaseController
 {
     /**
-     * @return object|\Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @return object| AuthorizationChecker
      */
     public function getSecurityAuthorizationChecker()
     {
@@ -17,7 +19,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return object|\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+     * @return object| TokenStorage
      */
     public function getSecurityTokenStorage()
     {

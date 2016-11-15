@@ -2,7 +2,7 @@
 
 namespace UserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use EventBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +46,7 @@ class RegisterController extends Controller
 
     private function authenticateUser(User $user)
     {
-        $this->container->get('security.token_storage')
+        $this->getSecurityTokenStorage()
             ->setToken(
                 new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles())
             );

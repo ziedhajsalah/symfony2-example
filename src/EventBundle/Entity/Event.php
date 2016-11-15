@@ -3,6 +3,7 @@
 namespace EventBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use UserBundle\Entity\User;
 
 /**
@@ -55,6 +56,12 @@ class Event
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $owner;
+
+    /**
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * @ORM\Column(length=255, unique=true)
+     */
+    protected $slug;
 
     /**
      * Get id
@@ -175,5 +182,21 @@ class Event
         $this->owner = $owner;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }

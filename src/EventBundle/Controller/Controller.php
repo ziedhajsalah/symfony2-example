@@ -8,11 +8,17 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Controller extends BaseController
 {
+    /**
+     * @return object|\Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     */
     public function getSecurityAuthorizationChecker()
     {
         return $this->container->get('security.authorization_checker');
     }
 
+    /**
+     * @return object|\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+     */
     public function getSecurityTokenStorage()
     {
         return $this->container->get('security.token_storage');

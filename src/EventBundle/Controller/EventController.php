@@ -94,6 +94,7 @@ class EventController extends Controller
     public function editAction(Request $request, Event $event)
     {
         $this->enforceUserSecurity();
+        $this->enforceOwnerSecurity($event);
 
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('EventBundle\Form\EventType', $event);
@@ -120,6 +121,7 @@ class EventController extends Controller
     public function deleteAction(Request $request, Event $event)
     {
         $this->enforceUserSecurity();
+        $this->enforceOwnerSecurity($event);
 
         $form = $this->createDeleteForm($event);
         $form->handleRequest($request);
@@ -162,6 +164,13 @@ class EventController extends Controller
             throw new AccessDeniedException(
                 'you need ' . $role . 'to access this page'
             );
+        }
+    }
+
+    private function enforceOwnerSecurity(Event $event)
+    {
+        if ($this->getUser() != $event->getOwner()) {
+            throw new AccessDeniedException('Your are not the owner!');
         }
     }
 }

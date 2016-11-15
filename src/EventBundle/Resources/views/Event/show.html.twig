@@ -2,39 +2,44 @@
 
 {% block body %}
 
-    <section class="event-show">
-        <header id="menu">
-            <a class="link" href="{{ path('event_index') }}">&larr; back to the events list</a>
-        </header>
+  <section class="event-show">
+    <header id="menu">
+      <a class="link" href="{{ path('event_index') }}">&larr; back to the events list</a>
+    </header>
 
-        <article>
-            <header class="map-container">
-                <img src="http://maps.googleapis.com/maps/api/staticmap?center={{ event.location | url_encode }}&markers=color:red%7Ccolor:red%7C{{ event.location | url_encode }}&zoom=14&size=300x300&maptype=roadmap&sensor=false" />
-            </header>
-            <section>
-                <h1>
-                    {{ event.name }}
-                    <a class="button" href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
-                </h1>
+    <article>
+      <header class="map-container">
+        <img
+          src="http://maps.googleapis.com/maps/api/staticmap?center={{ event.location | url_encode }}&markers=color:red%7Ccolor:red%7C{{ event.location | url_encode }}&zoom=14&size=300x300&maptype=roadmap&sensor=false"/>
+      </header>
+      <section>
+        <h1>
+          {{ event.name }}
+          {% if app.user == event.owner %}
+            <a class="button" href="{{ path('event_edit', {'id': event.id}) }}">
+              edit
+            </a>
+          {% endif %}
+        </h1>
 
-                <dl>
-                    <dt>where:</dt>
-                    <dd>{{ event.location }}</dd>
+        <dl>
+          <dt>where:</dt>
+          <dd>{{ event.location }}</dd>
 
-                    <dt>when:</dt>
-                    <dd>{{ event.time | date('g:ia / l M j, Y') }}</dd>
+          <dt>when:</dt>
+          <dd>{{ event.time | date('g:ia / l M j, Y') }}</dd>
 
-                    <dt>what:</dt>
-                    <dd>{{ event.details }}</dd>
+          <dt>what:</dt>
+          <dd>{{ event.details }}</dd>
 
-                    <dt>who:</dt>
-                    <dd>
-                        <ul class="users">
-                            <li>nobody yet!</li>
-                        </ul>
-                    </dd>
-                </dl>
-            </section>
-        </article>
-    </section>
+          <dt>who:</dt>
+          <dd>
+            <ul class="users">
+              <li>nobody yet!</li>
+            </ul>
+          </dd>
+        </dl>
+      </section>
+    </article>
+  </section>
 {% endblock %}

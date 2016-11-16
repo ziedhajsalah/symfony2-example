@@ -114,20 +114,7 @@ class EventController extends Controller
         $em->persist($event);
         $em->flush();
 
-        if ($format == 'json') {
-            $data = [
-                'attending' => true,
-            ];
-
-            return new JsonResponse($data);
-        }
-
-        return $this->redirectToRoute(
-            'event_show',
-            [
-                'slug' => $event->getSlug(),
-            ]
-        );
+        return $this->createAttendingResponse($event, $format);
     }
 
     public function unattendAction($id, $format)
@@ -151,9 +138,18 @@ class EventController extends Controller
         $em->persist($event);
         $em->flush();
 
+        return $this->createAttendingResponse($event, $format);
+    }
+
+    /**
+     * @param $event
+     * @param $format
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function createAttendingResponse(Event $event, $format) {
         if ($format == 'json') {
             $data = [
-                'attending' => false,
+                'attending' => $event->hasAttendee($this->getUser()),
             ];
 
             return new JsonResponse($data);

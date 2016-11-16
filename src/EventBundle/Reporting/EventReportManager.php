@@ -2,13 +2,14 @@
 
 namespace EventBundle\Reporting;
 
+use Doctrine\ORM\EntityManager;
 use EventBundle\Entity\Event;
 
 class EventReportManager
 {
     private $em;
 
-    public function __construct($em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }

@@ -5,3 +5,9 @@ services:
     event_report_manager:
         class: EventBundle\Reporting\EventReportManager
         arguments: ["@doctrine.orm.entity_manager", "@router"]
+
+    event.twig.event_extension:
+        class: EventBundle\Twig\EventExtension
+        arguments: []
+        tags:
+            - { name: twig.extension }

@@ -2,7 +2,6 @@
 
 namespace EventBundle\Controller;
 
-use EventBundle\Reporting\EventReportManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,8 +12,7 @@ class ReportController extends Controller
      */
     public function updatedEventsAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $eventReportManager = new EventReportManager($em);
+        $eventReportManager = $this->get('event_report_manager');
         $content = $eventReportManager->getRecentlyUpdatedReport();
 
         $response = new Response($content);

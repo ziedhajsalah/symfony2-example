@@ -33,5 +33,5 @@ event_attend:
     defaults: { _controller: "EventBundle:Event:attend" }
 
 event_unattend:
-    path:    /{id}/attend
+    path:    /{id}/unattend
     defaults: { _controller: "EventBundle:Event:unattend" }

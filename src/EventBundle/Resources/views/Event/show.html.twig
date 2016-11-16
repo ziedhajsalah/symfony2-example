@@ -43,10 +43,17 @@
                 <li>nobody yet!</li>
               {% endfor %}
             </ul>
-            <a href="{{ path('event_attend', {'id': event.id}) }}"
-              class="btn btn-success btn-xs">
-              I want to attend
-            </a>
+            {% if event.hasAttendee(app.user) %}
+              <a href="{{ path('event_unattend', {'id': event.id}) }}"
+                 class="btn btn-danger btn-xs">
+                I am not attending
+              </a>
+            {% else %}
+              <a href="{{ path('event_attend', {'id': event.id}) }}"
+                 class="btn btn-success btn-xs">
+                I want to attend
+              </a>
+            {% endif %}
           </dd>
         </dl>
       </section>

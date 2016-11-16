@@ -120,8 +120,33 @@ class EventController extends Controller
         );
     }
 
-    public function unattendAction()
+    public function unattendAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var Event
+         */
+        $event = $em->getRepository('EventBundle:Event')->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException(
+                'No event found for id '.$id
+            );
+        }
+
+        if ($event->hasAttendee($this->getUser())) {
+            $event->getAttendees()->removeElement($this->getUser());
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        return $this->redirectToRoute(
+            'event_show',
+            [
+                'slug' => $event->getSlug(),
+            ]
+        );
     }
 
     /**

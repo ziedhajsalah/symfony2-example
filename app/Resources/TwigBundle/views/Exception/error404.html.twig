@@ -12,4 +12,8 @@
       <div>This page is not found</div>
     </article>
   </section>
+
+  <section class="events">
+    {{ render(controller('EventBundle:Event:_upcommingEvents')) }}
+  </section>
 {% endblock %}

@@ -21,12 +21,7 @@ class EventController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $events = $em->getRepository('EventBundle:Event')
-            ->getUpcomingEvents();
-
-        return ['events' => $events];
+        return [];
     }
 
     /**
@@ -236,4 +231,15 @@ class EventController extends Controller
     }
 
 
+    public function _upcommingEventsAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $events = $em->getRepository('EventBundle:Event')
+            ->getUpcomingEvents();
+
+        return $this->render('EventBundle:Event:_upcommingEvents.html.twig', [
+            'events' => $events
+        ]);
+    }
 }

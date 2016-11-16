@@ -12,4 +12,7 @@
       <div>Server is down please try later</div>
     </article>
   </section>
+  <section class="events">
+    {{ render(controller('EventBundle:Event:_upcommingEvents')) }}
+  </section>
 {% endblock %}

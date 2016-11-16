@@ -102,18 +102,22 @@ class EventController extends Controller
 
         if (!$event) {
             throw $this->createNotFoundException(
-                'No event found for id ' . $id
+                'No event found for id '.$id
             );
         }
 
-        $event->getAttendees()->add($this->getUser());
+        if (!$event->hasAttendee($this->getUser())) {
+            $event->getAttendees()->add($this->getUser());
+            $em->persist($event);
+            $em->flush();
+        }
 
-        $em->persist($event);
-        $em->flush();
-
-        return $this->redirectToRoute('event_show',[
-            'slug' => $event->getSlug()
-        ]);
+        return $this->redirectToRoute(
+            'event_show',
+            [
+                'slug' => $event->getSlug(),
+            ]
+        );
     }
 
     public function unattendAction()

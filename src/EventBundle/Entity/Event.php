@@ -93,7 +93,7 @@ class Event
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -116,7 +116,7 @@ class Event
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -139,7 +139,7 @@ class Event
     /**
      * Get time
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTime()
     {
@@ -162,7 +162,7 @@ class Event
     /**
      * Get location
      *
-     * @return string 
+     * @return string
      */
     public function getLocation()
     {
@@ -185,7 +185,7 @@ class Event
     /**
      * Get details
      *
-     * @return string 
+     * @return string
      */
     public function getDetails()
     {
@@ -249,5 +249,14 @@ class Event
     public function getAttendees()
     {
         return $this->attendees;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasAttendee(User $user)
+    {
+        return $this->getAttendees()->contains($user);
     }
 }

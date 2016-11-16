@@ -3,6 +3,7 @@
 namespace EventBundle\Controller;
 
 use EventBundle\Entity\Event;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -92,7 +93,7 @@ class EventController extends Controller
         ];
     }
 
-    public function attendAction($id)
+    public function attendAction($id, $format)
     {
         $em = $this->getDoctrine()->getManager();
         /**
@@ -108,8 +109,17 @@ class EventController extends Controller
 
         if (!$event->hasAttendee($this->getUser())) {
             $event->getAttendees()->add($this->getUser());
-            $em->persist($event);
-            $em->flush();
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        if ($format == 'json') {
+            $data = [
+                'attending' => true,
+            ];
+
+            return new JsonResponse($data);
         }
 
         return $this->redirectToRoute(
@@ -120,7 +130,7 @@ class EventController extends Controller
         );
     }
 
-    public function unattendAction($id)
+    public function unattendAction($id, $format)
     {
         $em = $this->getDoctrine()->getManager();
         /**
@@ -140,6 +150,14 @@ class EventController extends Controller
 
         $em->persist($event);
         $em->flush();
+
+        if ($format == 'json') {
+            $data = [
+                'attending' => false,
+            ];
+
+            return new JsonResponse($data);
+        }
 
         return $this->redirectToRoute(
             'event_show',

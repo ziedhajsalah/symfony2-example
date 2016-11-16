@@ -45,12 +45,12 @@
             </ul>
             {% if event.hasAttendee(app.user) %}
               <a href="{{ path('event_unattend', {'id': event.id}) }}"
-                 class="btn btn-danger btn-xs">
+                 class="btn btn-danger btn-xs js-attend-toggle">
                 I am not attending
               </a>
             {% else %}
               <a href="{{ path('event_attend', {'id': event.id}) }}"
-                 class="btn btn-success btn-xs">
+                 class="btn btn-success btn-xs js-attend-toggle">
                 I want to attend
               </a>
             {% endif %}
@@ -59,4 +59,30 @@
       </section>
     </article>
   </section>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script>
+    $(document).ready(function () {
+      $('.js-attend-toggle').on('click', function (e) {
+        e.preventDefault()
+
+        var $anchor = $(this)
+        var url = $(this).attr('href') + '.json'
+
+        $.post(url, null, function (data) {
+          if (data.attending) {
+            var message = 'You are registered for this event'
+          } else {
+            var message = 'You are unregistered from this event'
+          }
+
+          $anchor.after('<span class="label label-default">' + message +'</span>')
+          $anchor.hide()
+        })
+      })
+    })
+  </script>
 {% endblock %}

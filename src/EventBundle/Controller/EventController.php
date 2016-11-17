@@ -3,10 +3,9 @@
 namespace EventBundle\Controller;
 
 use EventBundle\Entity\Event;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Event controller.
@@ -22,12 +21,7 @@ class EventController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $events = $em->getRepository('EventBundle:Event')->findAll();
-        //var_dump($em->getRepository('UserBundle:User')->findOneByUsernameOrEmail('admin@mail.com'));
-        //var_dump($em->getRepository('UserBundle:User')->findOneByUsernameOrEmail('administrator'));die;
-        return ['events' => $events];
+        return [];
     }
 
     /**
@@ -46,13 +40,19 @@ class EventController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $event->setOwner($user);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush($event);
 
-            return $this->redirectToRoute('event_show', array(
-                'id' => $event->getId()
-            ));
+            return $this->redirectToRoute(
+                'event_show',
+                array(
+                    'id' => $event->getId(),
+                )
+            );
         }
 
         return [
@@ -70,16 +70,91 @@ class EventController extends Controller
      * Finds and displays a event entity.
      *
      * @Template()
-     *
+     * @param $slug
+     * @return array
      */
-    public function showAction(Event $event)
+    public function showAction($slug)
     {
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('EventBundle:Event')
+            ->findOneBy(['slug' => $slug]);
+
         $deleteForm = $this->createDeleteForm($event);
 
         return [
             'event'       => $event,
             'delete_form' => $deleteForm->createView(),
         ];
+    }
+
+    public function attendAction($id, $format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var Event
+         */
+        $event = $em->getRepository('EventBundle:Event')->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException(
+                'No event found for id '.$id
+            );
+        }
+
+        if (!$event->hasAttendee($this->getUser())) {
+            $event->getAttendees()->add($this->getUser());
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        return $this->createAttendingResponse($event, $format);
+    }
+
+    public function unattendAction($id, $format)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var Event
+         */
+        $event = $em->getRepository('EventBundle:Event')->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException(
+                'No event found for id '.$id
+            );
+        }
+
+        if ($event->hasAttendee($this->getUser())) {
+            $event->getAttendees()->removeElement($this->getUser());
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        return $this->createAttendingResponse($event, $format);
+    }
+
+    /**
+     * @param $event
+     * @param $format
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function createAttendingResponse(Event $event, $format) {
+        if ($format == 'json') {
+            $data = [
+                'attending' => $event->hasAttendee($this->getUser()),
+            ];
+
+            return new JsonResponse($data);
+        }
+
+        return $this->redirectToRoute(
+            'event_show',
+            [
+                'slug' => $event->getSlug(),
+            ]
+        );
     }
 
     /**
@@ -91,6 +166,7 @@ class EventController extends Controller
     public function editAction(Request $request, Event $event)
     {
         $this->enforceUserSecurity();
+        $this->enforceOwnerSecurity($event);
 
         $deleteForm = $this->createDeleteForm($event);
         $editForm = $this->createForm('EventBundle\Form\EventType', $event);
@@ -99,9 +175,12 @@ class EventController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('event_edit', array(
-                'id' => $event->getId()
-            ));
+            return $this->redirectToRoute(
+                'event_edit',
+                array(
+                    'id' => $event->getId(),
+                )
+            );
         }
 
         return [
@@ -117,6 +196,7 @@ class EventController extends Controller
     public function deleteAction(Request $request, Event $event)
     {
         $this->enforceUserSecurity();
+        $this->enforceOwnerSecurity($event);
 
         $form = $this->createDeleteForm($event);
         $form->handleRequest($request);
@@ -140,25 +220,26 @@ class EventController extends Controller
     private function createDeleteForm(Event $event)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl(
-                'event_delete', array('id' => $event->getId())
-            ))
+            ->setAction(
+                $this->generateUrl(
+                    'event_delete',
+                    array('id' => $event->getId())
+                )
+            )
             ->setMethod('DELETE')
             ->getForm();
     }
 
-    /**
-     * Checks if the user is authenticated and has ROLE_USER or throw an Exception
-     * @param string $role
-     */
-    private function enforceUserSecurity($role = 'ROLE_USER') {
-        $securityAuthorizationChecker = $this
-            ->get('security.authorization_checker');
 
-        if(!$securityAuthorizationChecker->isGranted($role)) {
-            throw new AccessDeniedException(
-                'you need ' . $role . 'to access this page'
-            );
-        }
+    public function _upcomingEventsAction($max = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $events = $em->getRepository('EventBundle:Event')
+            ->getUpcomingEvents($max);
+
+        return $this->render('EventBundle:Event:_upcomingEvents.html.twig', [
+            'events' => $events
+        ]);
     }
 }

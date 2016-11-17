@@ -2,7 +2,7 @@
 
 namespace UserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use EventBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +15,8 @@ class RegisterController extends Controller
     /**
      * @Route("/register", name="user_register")
      * @Template()
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function registerAction(Request $request)
     {
@@ -26,7 +28,7 @@ class RegisterController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $user->setPassword($this->encodePassword($user, $user->getPlainPassword()));
+//            $user->setPassword($this->encodePassword($user, $user->getPlainPassword()));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -46,17 +48,17 @@ class RegisterController extends Controller
 
     private function authenticateUser(User $user)
     {
-        $this->container->get('security.token_storage')
+        $this->getSecurityTokenStorage()
             ->setToken(
                 new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles())
             );
     }
 
-    private function encodePassword(User $user, $plainPassword)
-    {
-        $encoder = $this->container->get('security.encoder_factory')
-            ->getEncoder($user);
-
-        return $encoder->encodePassword($plainPassword, $user->getSalt());
-    }
+//    private function encodePassword(User $user, $plainPassword)
+//    {
+//        $encoder = $this->container->get('security.encoder_factory')
+//            ->getEncoder($user);
+//
+//        return $encoder->encodePassword($plainPassword, $user->getSalt());
+//    }
 }

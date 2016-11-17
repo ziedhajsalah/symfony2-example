@@ -3,12 +3,13 @@
 namespace AppBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use UserBundle\Entity\User;
 
-class LoadUsers implements FixtureInterface, ContainerAwareInterface
+class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     private $container;
 
@@ -16,13 +17,13 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
     {
         $user = new User();
         $user->setUsername('user');
-        $user->setPassword($this->encodePassword($user, 'userpassword'));
+        $user->setPlainPassword('userpassword');
         $user->setEmail('user@mail.com');
         $manager->persist($user);
 
         $admin = new User();
         $admin->setUsername('administrator');
-        $admin->setPassword($this->encodePassword($user, 'adminpassword'));
+        $admin->setPlainPassword('adminpassword');
         $admin->setEmail('admin@mail.com');
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setIsActive(true);
@@ -37,11 +38,13 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
-    private function encodePassword(User $user, $plainPassword)
+    /**
+     * Get the order of this fixture
+     *
+     * @return integer
+     */
+    public function getOrder()
     {
-        $encoder = $this->container->get('security.encoder_factory')
-            ->getEncoder($user);
-
-        return $encoder->encodePassword($plainPassword, $user->getSalt());
+        return 10;
     }
 }

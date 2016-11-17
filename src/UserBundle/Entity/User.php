@@ -2,6 +2,7 @@
 
 namespace UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,6 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
  * @UniqueEntity(fields="username", message="This username is already taken")
  * @UniqueEntity(fields="email", message="This email exists")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -73,6 +75,16 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive = true;
+
+    /**
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="owner")
+     */
+    private $events;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -333,7 +345,21 @@ class User implements AdvancedUserInterface, \Serializable
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
+        $this->setPlainPassword(null);
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getUsername();
     }
 }

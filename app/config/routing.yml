@@ -5,3 +5,7 @@ event:
 user_routes:
     resource: "@UserBundle/Controller"
     type: annotation
+
+event_reports:
+    resource: "@EventBundle/Controller/ReportController.php"
+    type: annotation

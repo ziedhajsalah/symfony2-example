@@ -23,6 +23,9 @@ framework:
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
+    assets:
+        version: '4-zied'
+        version_format: "%%s?v=%%s"
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~

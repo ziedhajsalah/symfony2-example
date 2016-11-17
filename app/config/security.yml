@@ -27,7 +27,7 @@ security:
             anonymous: ~
             switch_user: ~
             remember_me:
-                key: "secret key"
+                secret: "%secret%"
             #http_basic:
             #    realm: "Secured Demo Area"
 

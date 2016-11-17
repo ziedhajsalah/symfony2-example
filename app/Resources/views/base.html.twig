@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>
-            {%- if block('title') -%}
-                {{ block('title') }} | StarWars Events
-            {%- else -%}
-                StarWars Events
-            {%- endif -%}
-        </title>
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('bundles/event/css/event.css') }}">
-            <link rel="stylesheet" href="{{ asset('bundles/event/css/events.css') }}">
-            <link rel="stylesheet" href="{{ asset('bundles/event/css/main.css') }}">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        {% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% if app.session.flashBag.has('success') %}
-            <div class="alert alert-success">
-                {% for msg in app.session.flashBag.get('success') %}
-                    {{ msg }}
-                {% endfor %}
-            </div>
-        {% endif %}
+<head>
+  <meta charset="UTF-8"/>
+  <title>
+    {%- if block('title') -%}
+      {{ block('title') }} | StarWars Events
+    {%- else -%}
+      StarWars Events
+    {%- endif -%}
+  </title>
+  {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/event/css/event.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/event/css/events.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/event/css/main.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  {% endblock %}
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body>
+{% if app.session.flashBag.has('success') %}
+  <div class="alert alert-success">
+    {% for msg in app.session.flashBag.get('success') %}
+      {{ msg }}
+    {% endfor %}
+  </div>
+{% endif %}
 
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-          <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
-        {% endblock %}
-    </body>
+{% block body %}{% endblock %}
+{% block javascripts %}
+  <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+{% endblock %}
+</body>
 </html>

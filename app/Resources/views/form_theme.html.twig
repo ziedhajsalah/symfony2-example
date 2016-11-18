@@ -1,7 +1,17 @@
 {%- block form_row -%}
-  <div class="form-group">
+  <div class="form-group {{ errors|length > 0 ? 'has-error' : '' }}">
     {{- form_label(form) -}}
     {{- form_errors(form) -}}
     {{- form_widget(form) -}}
   </div>
 {%- endblock form_row -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+    <ul class="help-block">
+        {%- for error in errors -%}
+            <li>{{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+    {%- endif -%}
+{%- endblock form_errors -%}

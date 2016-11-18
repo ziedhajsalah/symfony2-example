@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use UserBundle\Entity\User;
 
@@ -24,6 +26,10 @@ class RegisterFormType extends AbstractType
             );
     }
 
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $view['plainPassword']['first']->vars['help'] = 'Your password must have at least one capital letter';
+    }
     public function getBlockPrefix()
     {
         return 'user_register';

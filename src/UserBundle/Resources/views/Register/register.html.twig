@@ -1,33 +1,36 @@
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/user/css/login.css') }}">
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('bundles/user/css/login.css') }}">
 {% endblock %}
 
 {% block body %}
-    <section class="login">
-        <article>
-            <h1>Register</h1>
-            <form action="{{ path('user_register') }}" method="post" novalidate>
-                {{ form_errors(register_form) }}
-                <div class="awesome-username-wrapper">
-                    {{ form_errors(register_form.username) }}
-                    {{ form_label(register_form.username) }}
-                    {{ form_widget(register_form.username) }}
-                </div>
-                {{ form_row(register_form.email) }}
-                {{ form_row(register_form.plainPassword.first, {
-                    label: 'Password'
-                }) }}
-                {{ form_row(register_form.plainPassword.second, {
-                    label: 'Confirm Password'
-                }) }}
+  <section class="login">
+    <article>
+      <h1>Register</h1>
+      <form action="{{ path('user_register') }}" method="post" novalidate>
+        {{ form_errors(register_form) }}
+        <div class="awesome-username-wrapper">
+          {{ form_errors(register_form.username) }}
+          {{ form_label(register_form.username) }}
+          {{ form_widget(register_form.username) }}
+        </div>
+        {{ form_row(register_form.email, {
+          'attr': { 'class': 'a-clever-class' },
+          'help': 'type a valid email'
+        }) }}
+        {{ form_row(register_form.plainPassword.first, {
+          label: 'Password'
+        }) }}
+        {{ form_row(register_form.plainPassword.second, {
+          label: 'Confirm Password'
+        }) }}
 
-                {{ form_rest(register_form) }}
-                <input type="submit" value="Register"
-                       class="btn btn-primary pull-right">
-            </form>
-        </article>
-    </section>
+        {{ form_rest(register_form) }}
+        <input type="submit" value="Register"
+               class="btn btn-primary pull-right">
+      </form>
+    </article>
+  </section>
 {% endblock %}
